@@ -3,7 +3,12 @@
     <title>Piggy Bank Account</title>
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@23.0.4/dist/keycloak.min.js"></script>
     <script>
-      
+      var keycloak = new Keycloak();
+        keycloak.init().success(function(authenticated) {
+            alert(authenticated ? 'authenticated' : 'not authenticated');
+        }).error(function() {
+            alert('failed to initialize');
+        });
     </script>
   </head>
   <body>
