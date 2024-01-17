@@ -6,9 +6,9 @@
 
       const doInit = async function() {
         const keycloak = new Keycloak({
-            url: 'http://keycloak-server${kc_base_path}',
-            realm: 'myrealm',
-            clientId: 'myapp'
+            url: 'https://lemur-14.cloud-iam.com/',
+            realm: 'piggy-bank',
+            clientId: 'piggy-web-app'
         });
 
         try {
