@@ -1,7 +1,9 @@
 <html>
   <head>
     <title>Piggy Bank Account</title>
-    <script src="https://cdn.jsdelivr.net/npm/keycloak-js@23.0.3/dist/keycloak.min.js"></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/keycloak-js@23.0.3/dist/keycloak.min.js"></script-->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/oauth4webapi@2.6.0/build/index.min.js"></script> -->
+    <script src="./oidc-client.js"></script>
     <script>
 
       const doInit = async function() {
@@ -18,7 +20,80 @@
             console.error('Failed to initialize adapter:', error);
         }
       }
-      doInit();
+      //doInit();
+
+      var mgr = new UserManager({
+        authority: "https://lemur-14.cloud-iam.com/auth/realms/piggy-bank/",
+        client_id: "piggy-web-app",
+        redirect_uri: "https://timely-pie-587a09.netlify.app/private.html",
+        response_type: "code",
+        scope: "openid profile",
+        filterProtocolClaims: true,
+        loadUserInfo: true
+      });
+
+      localStorage.setItem("piggyUser", null);
+      
+      var piggy = {
+        
+        manager: mgr,
+        
+        isLoggedIn: function() {
+          let user = localStorage.getItem("piggyUser");
+          if (user.expired) {
+            console.log("Stored user expired so assuming user logged in");
+            localStorage.setItem("piggyUser", null);
+          }
+          return user != null && !user.expired;
+        },
+
+        getClaims: function() {
+            return piggy.user.profile;
+        },
+
+        getAuthorizationHeaderValue: function() {
+          let user = localStorage.getItem("piggyUser");
+          return user.token_type + " " + user.access_token;
+        },
+
+        startAuthentication: function() {
+            return piggy.manager.signinRedirect();
+        },
+
+        completeAuthentication: function() {
+            return piggy.manager.signinRedirectCallback().then(user => {
+                localStorage.setItem("piggyUser", user);
+            });
+        },
+
+        getAuthCode: function() {
+          // imsdk://oauthredirect
+          //  ?state=MGbiqG8N9vZvcftttPcjlXD6GpgaQ-YOXzikVz9zgIY
+          //  &session_state=7592eec4-1167-4733-aba1-b0a892ffcef1
+          //  &code=a1462cc8-4092-41c0-871b-97e4dfc8ec9c.7592eec4-1167-4733-aba1-b0a892ffcef1.561da556-a97c-41e4-8359-0d5a2f886376
+
+          let urlParams = new URLSearchParams(window.location.search);
+          let code = urlParams.get('code');
+          console.log("Found auth code: '" + code + "'");
+          return code;
+        }
+      
+      };
+
+      //Window.piggyBank = piggy;
+
+      if (piggy.getAuthCode()) {
+        console.log("Found code so assuming redirected from IDP");
+        piggy.manager.completeAuthentication();
+      }
+
+      if (piggy.isLoggedIn()) {
+        console.log("Found stored user so assuming user logged in");
+      } else {
+        console.log("No stored user so assuming needs to log in");
+        piggy.manager.startAuthentication();
+      }
+
     </script>
   </head>
   <body>
