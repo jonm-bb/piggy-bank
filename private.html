@@ -40,11 +40,13 @@
         
         isLoggedIn: function() {
           let user = localStorage.getItem("piggyUser");
-          if (user.expired) {
-            console.log("Stored user expired so assuming user logged in");
-            localStorage.setItem("piggyUser", null);
+          if (user & user != "null") {
+            if (user.expired) {
+              console.log("Stored user expired so assuming user logged in");
+              localStorage.setItem("piggyUser", null);
+            }
           }
-          return user != null && !user.expired;
+          return user != null && user != "null" && !user.expired;
         },
 
         getClaims: function() {
