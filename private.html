@@ -3,18 +3,22 @@
     <title>Piggy Bank Account</title>
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@23.0.4/dist/keycloak.min.js"></script>
     <script>
-      const keycloak = new Keycloak({
-          url: 'http://keycloak-server${kc_base_path}',
-          realm: 'myrealm',
-          clientId: 'myapp'
-      });
 
-      try {
-          const authenticated = await keycloak.init();
-          console.log(`User is ${authenticated ? 'authenticated' : 'not authenticated'}`);
-      } catch (error) {
-          console.error('Failed to initialize adapter:', error);
+      const doInit = async function() {
+        const keycloak = new Keycloak({
+            url: 'http://keycloak-server${kc_base_path}',
+            realm: 'myrealm',
+            clientId: 'myapp'
+        });
+
+        try {
+            const authenticated = await keycloak.init();
+            console.log(`User is ${authenticated ? 'authenticated' : 'not authenticated'}`);
+        } catch (error) {
+            console.error('Failed to initialize adapter:', error);
+        }
       }
+      doInit();
     </script>
   </head>
   <body>
