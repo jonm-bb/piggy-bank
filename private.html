@@ -86,14 +86,14 @@
 
       if (piggy.getAuthCode()) {
         console.log("Found code so assuming redirected from IDP");
-        piggy.manager.completeAuthentication();
+        piggy.completeAuthentication();
       }
 
       if (piggy.isLoggedIn()) {
         console.log("Found stored user so assuming user logged in");
       } else {
         console.log("No stored user so assuming needs to log in");
-        piggy.manager.startAuthentication();
+        piggy.startAuthentication();
       }
 
     </script>
