@@ -71,7 +71,7 @@
                 url.search = '';
                 let strippedUrl = url.toString();
                 console.log("Stripped URL to '" + strippedUrl + "'");
-                window.location = strippedUrl;
+                history.pushState({}, "", strippedUrl);
 
             }).catch(function (err) {
               console.log(err);
