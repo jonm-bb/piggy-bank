@@ -42,7 +42,7 @@
           let user = localStorage.getItem("piggyUser");
           if (user & user != "null") {
             if (user.expired) {
-              console.log("Stored user expired so assuming user logged in");
+              console.log("Stored user expired deleting from storage");
               localStorage.setItem("piggyUser", null);
             }
           }
@@ -64,7 +64,7 @@
 
         completeAuthentication: function() {
             return piggy.manager.signinRedirectCallback().then(user => {
-                console.log("Signed in with user")
+                console.log("Signed in with user: '" + user + "'");
                 localStorage.setItem("piggyUser", user);
             }).catch(function (err) {
               console.log(err);
@@ -90,9 +90,7 @@
       if (piggy.getAuthCode()) {
         console.log("Found code so assuming redirected from IDP");
         piggy.completeAuthentication();
-      }
-
-      if (piggy.isLoggedIn()) {
+      } else if (piggy.isLoggedIn()) {
         console.log("Found stored user so assuming user logged in");
       } else {
         console.log("No stored user so assuming needs to log in");
