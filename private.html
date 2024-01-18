@@ -66,6 +66,10 @@
             return piggy.manager.signinRedirectCallback().then(user => {
                 console.log("Signed in with user: '" + user + "'");
                 localStorage.setItem("piggyUser", user);
+                let url = new URL(Window.location);
+                url.search = '';
+                let result = url.toString();
+                console.log("Stripped URL to '" + result + "'");
             }).catch(function (err) {
               console.log(err);
             });
