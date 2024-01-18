@@ -64,7 +64,10 @@
 
         completeAuthentication: function() {
             return piggy.manager.signinRedirectCallback().then(user => {
+                console.log("Signed in with user")
                 localStorage.setItem("piggyUser", user);
+            }).catch(function (err) {
+              console.log(err);
             });
         },
 
